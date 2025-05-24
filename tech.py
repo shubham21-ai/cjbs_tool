@@ -7,6 +7,7 @@ from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_core.prompts import ChatPromptTemplate
 import os
 from dotenv import load_dotenv
+import json
 
 # Load environment variables
 load_dotenv()
@@ -83,7 +84,19 @@ Make sure to:
 8. Do not include any additional text or explanations in the output
 9. If you cannot find specific information, use "Information not available" and provide a general source URL
 
-Remember to format your response as a valid JSON object with all the required fields.
+Your response must be a valid JSON object with the following structure:
+{
+    "satellite_type": "string",
+    "satellite_type_source": "string",
+    "satellite_application": "string",
+    "application_source": "string",
+    "sensor_specs": "string",
+    "sensor_specs_source": "string",
+    "technological_breakthroughs": "string",
+    "breakthrough_source": "string"
+}
+
+Do not include any text before or after the JSON object.
 """
         self.prompt = ChatPromptTemplate.from_template(template)
 
@@ -116,8 +129,15 @@ Remember to format your response as a valid JSON object with all the required fi
             # Run the agent using invoke instead of run
             response = self.agent.invoke({"input": formatted_messages})
             
-            # Parse the response
-            parsed_output = self.output_parser.parse(response["output"])
+            # Clean the response output to ensure it's valid JSON
+            output_text = response["output"].strip()
+            if not output_text.startswith("{"):
+                output_text = output_text[output_text.find("{"):]
+            if not output_text.endswith("}"):
+                output_text = output_text[:output_text.rfind("}")+1]
+            
+            # Parse the cleaned response
+            parsed_output = self.output_parser.parse(output_text)
             
             # Add the satellite name to the output
             parsed_output["satellite_name"] = satellite_name
