@@ -72,7 +72,7 @@ Input: ```{input}```
 
 {format_instructions}
 
-Important Instructions:
+Make sure to:
 1. Use the available tools (Tavily Search) to find accurate information
 2. Include URLs for all source information
 3. Format the output exactly as specified in the format instructions
@@ -83,17 +83,7 @@ Important Instructions:
 8. Do not include any additional text or explanations in the output
 9. If you cannot find specific information, use "Information not available" and provide a general source URL
 
-Example Output Format:
-{
-    "satellite_type": "Communication",
-    "satellite_type_source": "https://example.com/source1",
-    "satellite_application": "Detailed application description",
-    "application_source": "https://example.com/source2",
-    "sensor_specs": "Detailed sensor specifications",
-    "sensor_specs_source": "https://example.com/source3",
-    "technological_breakthroughs": "List of breakthroughs",
-    "breakthrough_source": "https://example.com/source4"
-}
+Remember to format your response as a valid JSON object with all the required fields.
 """
         self.prompt = ChatPromptTemplate.from_template(template)
 
