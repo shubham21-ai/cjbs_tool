@@ -1,15 +1,15 @@
 # Core dependencies
+streamlit==1.31.0
 langchain==0.1.0
 langchain-google-genai==0.0.5
 langchain-community==0.0.10
-streamlit==1.30.0
 python-dotenv==1.0.0
 tenacity==8.2.3
 tavily-python==0.2.8
 google-generativeai==0.3.1
-pandas==2.1.0
+pandas==2.1.4
 
-# Additional dependencies for Streamlit Cloud
+# Additional dependencies
 numpy==1.24.3
 protobuf==4.25.1
 typing-extensions==4.8.0
@@ -29,6 +29,4 @@ watchdog==3.0.0
 gitpython==3.1.40
 validators==0.22.0
 beautifulsoup4==4.12.2
-soupsieve==2.5
-lxml==4.9.3
-html5lib==1.1 
+soupsieve==2.5 
