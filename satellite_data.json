@@ -1,0 +1,18 @@
+{
+    "STARLINK 1": {
+        "basic_info": {
+            "data": {
+                "altitude": "550 km (approximate, for early Starlink satellites)",
+                "altitude_source": "https://www.space.com/spacex-starlink-satellites.html",
+                "orbital_life_years": "5 years (approximate, for Starlink satellites)",
+                "orbital_life_source": "https://www.starlink.com/updates",
+                "launch_orbit_classification": "LEO (Low Earth Orbit)",
+                "orbit_classification_source": "https://www.starlink.com/updates",
+                "number_of_payloads": "1 (assumed, as individual Starlink satellites typically carry one payload)",
+                "payloads_source": "N/A - Information not readily available for individual early Starlink satellites",
+                "satellite_name": "STARLINK 1"
+            },
+            "last_updated": "2025-05-24T21:21:56.591068"
+        }
+    }
+}
