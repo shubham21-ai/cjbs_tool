@@ -1,13 +1,11 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import initialize_agent, AgentType, Tool
 from langchain_community.tools.tavily_search import TavilySearchResults
-from langchain_community.tools import DuckDuckGoSearchRun
 from data_manager import SatelliteDataManager
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_core.prompts import ChatPromptTemplate
 import os
 from dotenv import load_dotenv
-import json
 
 # Load environment variables
 load_dotenv()
@@ -18,7 +16,7 @@ SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY")
 
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 os.environ["TAVILY_API_KEY"] = TAVILY_API_KEY
-
+os.environ["SERPAPI_API_KEY"] = SERPAPI_API_KEY
 
 class TechAgent:
     def __init__(self):
@@ -79,24 +77,6 @@ Make sure to:
 3. Format the output exactly as specified in the format instructions
 4. Provide detailed and specific information
 5. Use reliable sources for all information
-6. If specific information is not available, use the most relevant information from similar satellites
-7. Always return a properly formatted JSON object
-8. Do not include any additional text or explanations in the output
-9. If you cannot find specific information, use "Information not available" and provide a general source URL
-
-Your response must be a valid JSON object with the following structure:
-{
-    "satellite_type": "string",
-    "satellite_type_source": "string",
-    "satellite_application": "string",
-    "application_source": "string",
-    "sensor_specs": "string",
-    "sensor_specs_source": "string",
-    "technological_breakthroughs": "string",
-    "breakthrough_source": "string"
-}
-
-Do not include any text before or after the JSON object.
 """
         self.prompt = ChatPromptTemplate.from_template(template)
 
@@ -112,9 +92,7 @@ Do not include any text before or after the JSON object.
             tools=self.tools,
             llm=self.llm,
             agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-            verbose=True,
-            handle_parsing_errors=True,
-            max_iterations=3
+            verbose=True
         )
 
     def process_satellite(self, satellite_name):
@@ -129,15 +107,8 @@ Do not include any text before or after the JSON object.
             # Run the agent using invoke instead of run
             response = self.agent.invoke({"input": formatted_messages})
             
-            # Clean the response output to ensure it's valid JSON
-            output_text = response["output"].strip()
-            if not output_text.startswith("{"):
-                output_text = output_text[output_text.find("{"):]
-            if not output_text.endswith("}"):
-                output_text = output_text[:output_text.rfind("}")+1]
-            
-            # Parse the cleaned response
-            parsed_output = self.output_parser.parse(output_text)
+            # Parse the response
+            parsed_output = self.output_parser.parse(response["output"])
             
             # Add the satellite name to the output
             parsed_output["satellite_name"] = satellite_name
