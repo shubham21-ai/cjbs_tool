@@ -17,7 +17,7 @@ SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY")
 
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 os.environ["TAVILY_API_KEY"] = TAVILY_API_KEY
-os.environ["SERPAPI_API_KEY"] = SERPAPI_API_KEY
+
 
 class TechAgent:
     def __init__(self):
@@ -72,12 +72,28 @@ Input: ```{input}```
 
 {format_instructions}
 
-Make sure to:
+Important Instructions:
 1. Use the available tools (Tavily Search) to find accurate information
 2. Include URLs for all source information
 3. Format the output exactly as specified in the format instructions
 4. Provide detailed and specific information
 5. Use reliable sources for all information
+6. If specific information is not available, use the most relevant information from similar satellites
+7. Always return a properly formatted JSON object
+8. Do not include any additional text or explanations in the output
+9. If you cannot find specific information, use "Information not available" and provide a general source URL
+
+Example Output Format:
+{
+    "satellite_type": "Communication",
+    "satellite_type_source": "https://example.com/source1",
+    "satellite_application": "Detailed application description",
+    "application_source": "https://example.com/source2",
+    "sensor_specs": "Detailed sensor specifications",
+    "sensor_specs_source": "https://example.com/source3",
+    "technological_breakthroughs": "List of breakthroughs",
+    "breakthrough_source": "https://example.com/source4"
+}
 """
         self.prompt = ChatPromptTemplate.from_template(template)
 
@@ -93,7 +109,9 @@ Make sure to:
             tools=self.tools,
             llm=self.llm,
             agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-            verbose=True
+            verbose=True,
+            handle_parsing_errors=True,
+            max_iterations=3
         )
 
     def process_satellite(self, satellite_name):
