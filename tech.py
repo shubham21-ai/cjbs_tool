@@ -6,6 +6,7 @@ from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_core.prompts import ChatPromptTemplate
 import os
 from dotenv import load_dotenv
+from langchain_community.tools import DuckDuckGoSearchRun
 
 # Load environment variables
 load_dotenv()
@@ -40,6 +41,11 @@ class TechAgent:
                 func=TavilySearchResults().run,
                 description="Useful for getting information from the web.",
             ),
+            Tool(
+                name="DuckDuckGo Search",
+                func=DuckDuckGoSearchRun().run,
+                description="Useful for searching the web using DuckDuckGo search engine."
+            )
         ]
 
     def _initialize_schema(self):
@@ -69,10 +75,18 @@ You need to find comprehensive technical specifications and details about the gi
 Take the input below delimited by triple backticks and use it to search and analyze using the available tools.
 Input: ```{input}```
 
+Available tools:
+IMPORTANT: Do not attempt to use any tools that are not listed above. If a tool is not available(None), do not try to use it.
+1. Tavily Search - For getting information from the web
+2. DuckDuckGo Search - For searching the web using DuckDuckGo search engine
+You can search websites, articles, news information, press releases, parliamentary reports, technical documentation, and scientific papers.
+
+IMPORTANT: Do not attempt to use any tools that are not listed above. If a tool is not available, do not try to use it.
+
 {format_instructions}
 
 Make sure to:
-1. Use the available tools (Tavily Search) to find accurate information
+1. Use the available tools to find accurate information
 2. Include URLs for all source information
 3. Format the output exactly as specified in the format instructions
 4. Provide detailed and specific information
