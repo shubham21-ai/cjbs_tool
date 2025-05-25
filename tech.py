@@ -44,7 +44,7 @@ class TechAgent:
             Tool(
                 name="DuckDuckGo Search",
                 func=DuckDuckGoSearchRun().run,
-                description="Useful for searching the web using DuckDuckGo search engine."
+                description="Useful for searching the web using DuckDuckGo search engine"
             )
         ]
 
@@ -76,12 +76,16 @@ Take the input below delimited by triple backticks and use it to search and anal
 Input: ```{input}```
 
 Available tools:
-IMPORTANT: Do not attempt to use any tools that are not listed above. If a tool is not available(None), do not try to use it.
 1. Tavily Search - For getting information from the web
 2. DuckDuckGo Search - For searching the web using DuckDuckGo search engine
-You can search websites, articles, news information, press releases, parliamentary reports, technical documentation, and scientific papers.
 
-IMPORTANT: Do not attempt to use any tools that are not listed above. If a tool is not available, do not try to use it.
+IMPORTANT INSTRUCTIONS:
+1. You MUST use one of the available tools listed above to search for information
+2. DO NOT try to use any other tools or "None" as a tool
+3. After gathering information, you MUST format your response as a valid JSON object
+4. The JSON object MUST include all required fields from the schema
+5. If information is not available, use "N/A" as the value
+6. For source URLs, use the actual URLs from your search results
 
 {format_instructions}
 
