@@ -49,7 +49,7 @@ class CaptureStdout:
             pass
 
 # Title and description
-st.title("🛰️ Satellite Information System")
+st.title("🛰️ SkyTrack: Satellite Info Explorer")
 st.markdown("""
 This application gathers comprehensive information about satellites using specialized AI agents.
 Each agent focuses on different aspects of satellite information:
