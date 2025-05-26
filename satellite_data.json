@@ -13,6 +13,158 @@
                 "satellite_name": "STARLINK 1"
             },
             "last_updated": "2025-05-24T21:21:56.591068"
+        },
+        "launch_cost_info": {
+            "data": {
+                "launch_cost": "$15-30 million (estimated)",
+                "launch_cost_source": "https://www.nextbigfuture.com/2019/12/spacex-starlink-satellites-cost-well-below-500000-each-and-falcon-9-launches-less-than-30-million.html, https://spacenews.com/spacex-and-the-categorical-imperative-to-achieve-low-launch-cost/",
+                "launch_vehicle": "Falcon 9",
+                "launch_vehicle_source": "https://www.space.com/spacex-starlink-satellites.html",
+                "launch_date": "May 23, 2019",
+                "launch_date_source": "https://www.space.com/spacex-starlink-satellites.html",
+                "launch_site": "Cape Canaveral Air Force Station, Florida",
+                "launch_site_source": "https://www.space.com/spacex-starlink-satellites.html",
+                "launch_mass": {
+                    "max_leo": "null",
+                    "actual_mass": "null"
+                },
+                "launch_mass_source": "null",
+                "launch_success": "1",
+                "launch_success_source": "https://www.space.com/spacex-starlink-satellites.html",
+                "vehicle_reusability": "1",
+                "reusability_details": "Previously flown Falcon 9 rocket was used",
+                "reusability_source": "https://www.space.com/spacex-first-starlink-satellites-launch-in-pictures.html",
+                "mission_cost": {
+                    "satellite_cost": "null",
+                    "launch_cost": "$15-30 million (estimated)",
+                    "other_costs": "null"
+                },
+                "mission_cost_source": "https://www.nextbigfuture.com/2019/12/spacex-starlink-satellites-cost-well-below-500000-each-and-falcon-9-launches-less-than-30-million.html, https://spacenews.com/spacex-and-the-categorical-imperative-to-achieve-low-launch-cost/",
+                "satellite_name": "STARLINK 1"
+            },
+            "last_updated": "2025-05-24T21:34:15.224861"
+        }
+    },
+    "CARTOSAT-2D": {
+        "basic_info": {
+            "data": {
+                "altitude": "511.0 km (Perigee), 519.5 km (Apogee)",
+                "altitude_source": "https://www.n2yo.com/satellite/?s=41948",
+                "orbital_life_years": "Unknown",
+                "orbital_life_source": "Not found in available sources",
+                "launch_orbit_classification": "Sun-synchronous orbit (SSO)",
+                "orbit_classification_source": "Multiple sources (DuckDuckGo search results)",
+                "number_of_payloads": "1 (primary) + 103 (co-passengers)",
+                "payloads_source": "Multiple sources (DuckDuckGo search results)",
+                "satellite_name": "CARTOSAT-2D"
+            },
+            "last_updated": "2025-05-25T12:11:10.535439"
+        },
+        "launch_cost_info": {
+            "data": {
+                "launch_cost": "Unknown",
+                "launch_cost_source": "Unable to find specific launch cost for CARTOSAT-2D",
+                "launch_vehicle": "PSLV-XL",
+                "launch_vehicle_source": "Multiple DuckDuckGo search results mentioning PSLV-XL for CARTOSAT-2D launch",
+                "launch_date": "February 15, 2017",
+                "launch_date_source": "Multiple DuckDuckGo search results",
+                "launch_site": "Sriharikota (SRI)",
+                "launch_site_source": "Multiple DuckDuckGo search results",
+                "launch_mass": "Unknown",
+                "launch_mass_source": "Unable to find launch mass information for CARTOSAT-2D",
+                "launch_success": "1",
+                "launch_success_source": "Multiple DuckDuckGo search results indicating successful launch",
+                "vehicle_reusability": "0",
+                "reusability_details": "PSLV is not reusable",
+                "reusability_source": "General knowledge of PSLV launch vehicle",
+                "mission_cost": "Unknown",
+                "mission_cost_source": "Unable to find mission cost information for CARTOSAT-2D",
+                "satellite_name": "CARTOSAT-2D"
+            },
+            "last_updated": "2025-05-25T13:26:01.481337"
+        }
+    },
+    "COSMOS 1023": {
+        "basic_info": {
+            "data": {
+                "altitude": "770 km",
+                "altitude_source": "https://isstracker.pl/en/satelity/10961",
+                "orbital_life_years": "NA",
+                "orbital_life_source": "NA",
+                "launch_orbit_classification": "LEO",
+                "orbit_classification_source": "https://isstracker.pl/en/satelity/10961",
+                "number_of_payloads": "NA",
+                "payloads_source": "NA",
+                "satellite_name": "COSMOS 1023"
+            },
+            "last_updated": "2025-05-26T19:05:24.085928"
+        },
+        "technical_specs": {
+            "data": {
+                "satellite_type": "Experimental",
+                "satellite_type_source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1978-063A",
+                "satellite_application": "Part of the Strela-1M military communications satellite system.  Used for relaying communications between the Soviet Union and overseas military stations.",
+                "application_source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1978-063A",
+                "sensor_specs": "NA",
+                "sensor_specs_source": "NA",
+                "technological_breakthroughs": "NA",
+                "breakthrough_source": "NA",
+                "satellite_name": "COSMOS 1023"
+            },
+            "last_updated": "2025-05-26T19:19:37.453926"
+        }
+    },
+    "ADITYA-L1": {
+        "basic_info": {
+            "data": {
+                "altitude": "1.5 million km",
+                "altitude_source": "https://en.wikipedia.org/wiki/Aditya-L1",
+                "orbital_life_years": "5.2",
+                "orbital_life_source": "https://en.wikipedia.org/wiki/Aditya-L1",
+                "launch_orbit_classification": "Halo orbit around L1 Lagrange point",
+                "orbit_classification_source": "https://suit.iucaa.in/mission",
+                "number_of_payloads": "7",
+                "payloads_source": "https://suit.iucaa.in/mission",
+                "satellite_name": "ADITYA-L1"
+            },
+            "last_updated": "2025-05-26T19:07:08.089826"
+        },
+        "technical_specs": {
+            "data": {
+                "satellite_type": "Science & Exploration",
+                "satellite_type_source": "https://en.wikipedia.org/wiki/Aditya-L1",
+                "satellite_application": "To study the Sun's atmosphere, solar magnetic storms, and their impact on space weather.  The mission includes remote sensing and in-situ measurements of the solar corona, chromosphere, and photosphere, as well as the solar wind and its interaction with the Earth's magnetosphere.",
+                "application_source": "https://www.isro.gov.in/Aditya_L1-MissionDetails.html",
+                "sensor_specs": "The satellite carries seven payloads.  Specific sensor details are limited in readily available sources but include:  Visible Emission Line Coronagraph (VELC) with imaging and spectroscopy from 1.05 R\u2609 to 3 R\u2609, a plate scale of 2.25 arcsecond per pixel; Solar Ultraviolet Imaging Telescope (SUIT) observing the Sun across 200-400 nm wavelength using 16 dichroic filters;  Fluxgate Magnetometer (MAG) for measuring local magnetic fields.  Further details on spectral bands and spatial resolution for each instrument are not consistently available in easily accessible public sources.",
+                "sensor_specs_source": "https://www.isro.gov.in/Aditya_L1.html, Search results from DuckDuckGo Search for \"ADITYA-L1 sensor specifications\"",
+                "technological_breakthroughs": "Placement in a halo orbit around the L1 Lagrange point for continuous solar observation without occultation.  The development and integration of seven indigenously developed payloads.",
+                "breakthrough_source": "https://www.isro.gov.in/Aditya_L1-MissionDetails.html, https://en.wikipedia.org/wiki/Aditya-L1",
+                "satellite_name": "ADITYA-L1"
+            },
+            "last_updated": "2025-05-26T19:18:30.118310"
+        },
+        "launch_cost_info": {
+            "data": {
+                "launch_cost": "NA",
+                "launch_cost_source": "NA",
+                "launch_vehicle": "PSLV-XL",
+                "launch_vehicle_source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2023-132A",
+                "launch_date": "2023-09-02",
+                "launch_date_source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2023-132A",
+                "launch_site": "Sriharikota, India",
+                "launch_site_source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2023-132A",
+                "launch_mass": "1475 kg",
+                "launch_mass_source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2023-132A",
+                "launch_success": "1",
+                "launch_success_source": "https://www.isro.gov.in/Aditya_L1.html",
+                "vehicle_reusability": "0",
+                "reusability_details": "NA",
+                "reusability_source": "NA",
+                "mission_cost": "{\n  \"total\": \"\u20b9400 crore (approx.)\",\n  \"components\": \"NA\"\n}",
+                "mission_cost_source": "DuckDuckGo Search Results",
+                "satellite_name": "ADITYA-L1"
+            },
+            "last_updated": "2025-05-26T19:19:05.885645"
         }
     }
 }
