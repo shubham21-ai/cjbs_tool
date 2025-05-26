@@ -17,7 +17,7 @@ data_manager = SatelliteDataManager()
 
 # Set page config
 st.set_page_config(
-    page_title="Satellite Information System",
+    page_title="SkyTrack: Satellite Info Explorer",
     page_icon="🛰️",
     layout="wide"
 )
