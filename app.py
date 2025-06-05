@@ -22,6 +22,14 @@ st.set_page_config(
     layout="wide"
 )
 
+# Initialize session state for satellite data if not exists
+if 'satellite_data' not in st.session_state:
+    st.session_state.satellite_data = {
+        "basic_info": {},
+        "technical_specs": {},
+        "launch_cost_info": {}
+    }
+
 class CaptureStdout:
     def __init__(self, container):
         self.container = container
@@ -61,22 +69,48 @@ Each agent focuses on different aspects of satellite information:
 # Sidebar for satellite selection
 st.sidebar.title("Satellite Selection")
 
-# Use session state to manage the current satellite name
+# Use session state to manage the current satellite name and list
 if 'satellite_name' not in st.session_state:
     st.session_state.satellite_name = ""
 
-satellite_name_input = st.sidebar.text_input(
-    "Enter Satellite Name", 
-    value=st.session_state.satellite_name,
-    key="satellite_name_input_key"
+if 'current_satellites' not in st.session_state:
+    st.session_state.current_satellites = []
+
+# Replace text input with text area for multiple satellites
+satellite_input = st.sidebar.text_area(
+    "Enter Satellite Names (one per line)", 
+    value="\n".join(st.session_state.current_satellites),
+    height=150
 )
 
-# Update session state when text input changes
-if satellite_name_input != st.session_state.satellite_name:
-    st.session_state.satellite_name = satellite_name_input
+# Process the input when the button is clicked
+if st.sidebar.button("Process Satellites"):
+    # Get all non-empty lines as satellites
+    new_satellites = [name.strip() for name in satellite_input.split('\n') if name.strip()]
+    # Update the current satellites list
+    st.session_state.current_satellites = new_satellites
+    # Set the first satellite as active if list is not empty
+    if new_satellites:
+        st.session_state.satellite_name = new_satellites[0]
     st.rerun()
 
-# Display existing satellites with delete option
+# Display current session satellites
+if st.session_state.current_satellites:
+    st.sidebar.markdown("### Current Session Satellites")
+    for sat in st.session_state.current_satellites:
+        col1, col2 = st.sidebar.columns([4, 1])
+        with col1:
+            if st.button(sat, key=f"current_select_{sat}"):
+                st.session_state.satellite_name = sat
+                st.rerun()
+        with col2:
+            if st.button("🗑️", key=f"current_delete_{sat}"):
+                st.session_state.current_satellites.remove(sat)
+                if st.session_state.satellite_name == sat:
+                    st.session_state.satellite_name = st.session_state.current_satellites[0] if st.session_state.current_satellites else ""
+                st.rerun()
+
+# Display previously searched satellites
 existing_satellites = data_manager.get_all_satellites()
 if existing_satellites:
     st.sidebar.markdown("### Previously Searched Satellites")
@@ -110,17 +144,27 @@ if st.session_state.satellite_name:
     satellite_name = st.session_state.satellite_name
     st.header(f"Information for {satellite_name}")
     
+    # Fetch all data at the start
+    basic_info_data = data_manager.get_satellite_data(satellite_name, "basic_info")
+    tech_specs_data = data_manager.get_satellite_data(satellite_name, "technical_specs")
+    launch_cost_data = data_manager.get_satellite_data(satellite_name, "launch_cost_info")
+    
+    # Update session state with latest data
+    st.session_state.satellite_data = {
+        "basic_info": basic_info_data.get("data", {}) if basic_info_data else {},
+        "technical_specs": tech_specs_data.get("data", {}) if tech_specs_data else {},
+        "launch_cost_info": launch_cost_data.get("data", {}) if launch_cost_data else {}
+    }
+    
     # Create tabs for different information categories
     tab1, tab2, tab3, tab4 = st.tabs(["Basic Information", "Technical Specifications", "Launch & Cost", "Raw JSON"])
     
     # Process and display basic information
     with tab1:
         st.subheader("Basic Information")
-        basic_info_data = data_manager.get_satellite_data(satellite_name, "basic_info")
-        if basic_info_data and "data" in basic_info_data:
-            data = basic_info_data["data"]
-            st.json(data)
-            json_str = json.dumps(data, indent=2)
+        if st.session_state.satellite_data["basic_info"]:
+            st.json(st.session_state.satellite_data["basic_info"])
+            json_str = json.dumps(st.session_state.satellite_data["basic_info"], indent=2)
             st.download_button(
                 label="Download JSON",
                 data=json_str,
@@ -154,8 +198,10 @@ if st.session_state.satellite_name:
                                         file_name=f"{satellite_name}_basic_info.json",
                                         mime="application/json"
                                     )
-                                    # Save the data
+                                    # Update session state and save the data
+                                    st.session_state.satellite_data["basic_info"] = result
                                     data_manager.append_satellite_data(satellite_name, "basic_info", result)
+                                    st.rerun()
                                 else:
                                     st.error("Failed to gather basic information.")
                             except Exception as e:
@@ -169,11 +215,9 @@ if st.session_state.satellite_name:
     # Process and display technical specifications
     with tab2:
         st.subheader("Technical Specifications")
-        tech_specs_data = data_manager.get_satellite_data(satellite_name, "technical_specs")
-        if tech_specs_data and "data" in tech_specs_data:
-            data = tech_specs_data["data"]
-            st.json(data)
-            json_str = json.dumps(data, indent=2)
+        if st.session_state.satellite_data["technical_specs"]:
+            st.json(st.session_state.satellite_data["technical_specs"])
+            json_str = json.dumps(st.session_state.satellite_data["technical_specs"], indent=2)
             st.download_button(
                 label="Download JSON",
                 data=json_str,
@@ -207,8 +251,10 @@ if st.session_state.satellite_name:
                                         file_name=f"{satellite_name}_tech_specs.json",
                                         mime="application/json"
                                     )
-                                    # Save the data
+                                    # Update session state and save the data
+                                    st.session_state.satellite_data["technical_specs"] = result
                                     data_manager.append_satellite_data(satellite_name, "technical_specs", result)
+                                    st.rerun()
                                 else:
                                     st.error("Failed to gather technical specifications.")
                             except Exception as e:
@@ -222,11 +268,9 @@ if st.session_state.satellite_name:
     # Process and display launch and cost information
     with tab3:
         st.subheader("Launch and Cost Information")
-        launch_cost_data = data_manager.get_satellite_data(satellite_name, "launch_cost_info")
-        if launch_cost_data and "data" in launch_cost_data:
-            data = launch_cost_data["data"]
-            st.json(data)
-            json_str = json.dumps(data, indent=2)
+        if st.session_state.satellite_data["launch_cost_info"]:
+            st.json(st.session_state.satellite_data["launch_cost_info"])
+            json_str = json.dumps(st.session_state.satellite_data["launch_cost_info"], indent=2)
             st.download_button(
                 label="Download JSON",
                 data=json_str,
@@ -260,8 +304,10 @@ if st.session_state.satellite_name:
                                         file_name=f"{satellite_name}_launch_cost.json",
                                         mime="application/json"
                                     )
-                                    # Save the data
+                                    # Update session state and save the data
+                                    st.session_state.satellite_data["launch_cost_info"] = result
                                     data_manager.append_satellite_data(satellite_name, "launch_cost_info", result)
+                                    st.rerun()
                                 else:
                                     st.error("Failed to gather launch and cost information.")
                             except Exception as e:
@@ -275,14 +321,9 @@ if st.session_state.satellite_name:
     # Display raw JSON data
     with tab4:
         st.subheader("Raw JSON Data")
-        all_data = {
-            "basic_info": basic_info_data.get("data", {}) if basic_info_data else {},
-            "technical_specs": tech_specs_data.get("data", {}) if tech_specs_data else {},
-            "launch_cost_info": launch_cost_data.get("data", {}) if launch_cost_data else {}
-        }
-        if any(all_data.values()):
-            st.json(all_data)
-            json_str = json.dumps(all_data, indent=2)
+        if any(st.session_state.satellite_data.values()):
+            st.json(st.session_state.satellite_data)
+            json_str = json.dumps(st.session_state.satellite_data, indent=2)
             st.download_button(
                 label="Download Combined JSON",
                 data=json_str,
