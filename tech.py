@@ -11,6 +11,7 @@ import time
 import json
 from tenacity import retry, stop_after_attempt, wait_exponential
 import re
+from exa_py import Exa
 
 # Load environment variables
 load_dotenv()
@@ -18,11 +19,11 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY")
-
+EXA_API_KEY = os.getenv("EXA_API_KEY")
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 os.environ["TAVILY_API_KEY"] = TAVILY_API_KEY
 os.environ["SERPAPI_API_KEY"] = SERPAPI_API_KEY
-
+exa = Exa(EXA_API_KEY) 
 class TechAgent:
     def __init__(self):
         self.satellite_data_manager = SatelliteDataManager()
@@ -51,6 +52,11 @@ class TechAgent:
                 name="Satellite Data Manager",
                 func=self.satellite_data_manager.get_satellite_data,
                 description="Useful for getting satellite data based on the user's query.",
+            ),
+            Tool(
+                name="Exa Search",
+                func=exa.search,
+                description="Useful for getting information from the web. Returns search results with URLs and content.",
             ),
             Tool(
                 name="Tavily Search",

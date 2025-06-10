@@ -9,3 +9,4 @@ pandas
 requests
 beautifulsoup4
 duckduckgo_search
+exa-py
