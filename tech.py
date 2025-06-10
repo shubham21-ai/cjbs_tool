@@ -103,7 +103,7 @@ class TechAgent:
 You are a satellite technology research assistant. Your task is to find comprehensive technical information about satellites using the available tools.
 
 IMPORTANT INSTRUCTIONS:
-1. Use the available tools to search for satellite technical information
+1. Use the available tools to search for satellite technical information ,try to find the data from Next Spaceflight , if your are not able to get data from their then try to find other websites , articles , news , press releases , parliament report and other resources as well.
 2. When you have gathered sufficient information, use the "Complete Task" tool with the structured data
 3. NEVER try to use "None" or any undefined tools
 4. If you cannot find specific information, indicate "Not available" for that field
