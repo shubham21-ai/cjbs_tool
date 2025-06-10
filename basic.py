@@ -5,12 +5,13 @@ from data_manager import SatelliteDataManager
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_community.utilities import SerpAPIWrapper
 import os
 from dotenv import load_dotenv
 import time
 import json
 from tenacity import retry, stop_after_attempt, wait_exponential
-from exa_py import Exa  # <-- Add this import
+
 
 # Load environment variables
 load_dotenv()
@@ -18,11 +19,11 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY")
-EXA_API_KEY = os.getenv("EXA_API_KEY")
+
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 os.environ["TAVILY_API_KEY"] = TAVILY_API_KEY
 os.environ["SERPAPI_API_KEY"] = SERPAPI_API_KEY
-exa = Exa(EXA_API_KEY)  # <-- Use your API key variable, not a string literal
+
 
 class BasicInfoBot:
     def __init__(self):
@@ -57,11 +58,6 @@ class BasicInfoBot:
                 name="Satellite Data Manager",
                 func=self.satellite_data_manager.get_satellite_data,
                 description="Useful for getting satellite data based on the user's query.",
-            ),
-            Tool(
-                name="Exa Search",
-                func=exa.search,
-                description="Useful for getting information from the web. Returns search results with URLs and content.",
             ),
             Tool(
                 name="Tavily Search",
@@ -118,7 +114,6 @@ IMPORTANT INSTRUCTIONS:
 3. NEVER try to use "None" or any undefined tools
 4. If you cannot find specific information, indicate "Not available" for that field
 5. Always include source URLs when available
-6. If you find both the launch date and end-of-life (or decommission) date, calculate the orbital_life_years yourself as the difference in years between those dates.
 
 Available tools: {tool_names}
 
