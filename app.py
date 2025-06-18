@@ -55,10 +55,16 @@ def upload_to_gsheet(satellite_name, data_dict):
         for section in ["basic_info", "technical_specs", "launch_cost_info"]:
             if section in data_dict:
                 for key, value in data_dict[section].items():
+                    # Convert null/None values to "NA"
+                    if value is None or value == "null" or value == "None":
+                        value = "NA"
                     row_data[f"{section}_{key}"] = value
         
         # Convert to DataFrame
         df = pd.DataFrame([row_data])
+        
+        # Replace any remaining null values with "NA"
+        df = df.fillna("NA")
         
         # Get the next empty row
         next_row = len(sheet.get_all_values()) + 1
@@ -75,6 +81,8 @@ def upload_to_gsheet(satellite_name, data_dict):
         
     except Exception as e:
         st.error(f"Error uploading to Google Sheet: {str(e)}")
+        # Print the data that caused the error for debugging
+        st.write("Problematic data:", row_data)
 
 class CaptureStdout:
     def __init__(self, container):
