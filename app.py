@@ -359,7 +359,7 @@ if st.session_state.satellite_name:
                 mime="application/json"
             )
 
-        # Upload to Google Sheet button
+    # Upload to Google Sheet button
         if st.button("Upload to Google Sheet"):
             # Combine all data into one dict for upload (flatten if needed)
             combined_data = {}
@@ -368,8 +368,7 @@ if st.session_state.satellite_name:
             upload_to_gsheet(satellite_name, combined_data)
             st.success("Data uploaded to Google Sheet!")
 
-        else:
-            st.info("No data available for this satellite yet.")
+        
     
 
     # Display last updated time if available
