@@ -10,3 +10,7 @@ requests
 beautifulsoup4
 duckduckgo_search
 exa-py
+gspread
+gspread_dataframe
+google-auth
+ipython
