@@ -358,18 +358,19 @@ if st.session_state.satellite_name:
                 file_name=f"{satellite_name}_all_data.json",
                 mime="application/json"
             )
+
+        # Upload to Google Sheet button
+        if st.button("Upload to Google Sheet"):
+            # Combine all data into one dict for upload (flatten if needed)
+            combined_data = {}
+            for section in ["basic_info", "technical_specs", "launch_cost_info"]:
+                combined_data.update(st.session_state.satellite_data.get(section, {}))
+            upload_to_gsheet(satellite_name, combined_data)
+            st.success("Data uploaded to Google Sheet!")
+
         else:
             st.info("No data available for this satellite yet.")
-    # ...after your tab4 code, before the "last updated" section...
-
-    # Upload to Google Sheet button
-    if st.button("Upload to Google Sheet"):
-        # Combine all data into one dict for upload (flatten if needed)
-        combined_data = {}
-        for section in ["basic_info", "technical_specs", "launch_cost_info"]:
-            combined_data.update(st.session_state.satellite_data.get(section, {}))
-        upload_to_gsheet(satellite_name, combined_data)
-        st.success("Data uploaded to Google Sheet!")
+    
 
     # Display last updated time if available
     if any([basic_info_data, tech_specs_data, launch_cost_data]):
