@@ -43,20 +43,38 @@ def get_gspread_client():
     return client
 
 def upload_to_gsheet(satellite_name, data_dict):
-    # Prepare data: first column is satellite name, then each key as a column
-    row = {"satellite_name": satellite_name}
-    row.update(data_dict)
-    df = pd.DataFrame([row])
-    client = get_gspread_client()
-    sheet = client.open_by_key(SHEET_ID).worksheet(WORKSHEET_NAME)
-    # Get existing data to determine where to append
-    existing = pd.DataFrame(sheet.get_all_records())
-    # If sheet is empty, write headers
-    if existing.empty:
-        set_with_dataframe(sheet, df)
-    else:
-        # Append new row
-        set_with_dataframe(sheet, pd.concat([existing, df], ignore_index=True))
+    try:
+        # Get the client and sheet
+        client = get_gspread_client()
+        sheet = client.open_by_key(SHEET_ID).worksheet(WORKSHEET_NAME)
+        
+        # Create a row with satellite name
+        row_data = {"satellite_name": satellite_name}
+        
+        # Add each section's data with a prefix to avoid conflicts
+        for section in ["basic_info", "technical_specs", "launch_cost_info"]:
+            if section in data_dict:
+                for key, value in data_dict[section].items():
+                    row_data[f"{section}_{key}"] = value
+        
+        # Convert to DataFrame
+        df = pd.DataFrame([row_data])
+        
+        # Get the next empty row
+        next_row = len(sheet.get_all_values()) + 1
+        
+        # If it's the first row, add headers
+        if next_row == 1:
+            sheet.update('A1', [list(df.columns)])
+            next_row = 2
+        
+        # Update the sheet with values
+        sheet.update(f'A{next_row}', df.values.tolist())
+        
+        st.success("Data uploaded to Google Sheet!")
+        
+    except Exception as e:
+        st.error(f"Error uploading to Google Sheet: {str(e)}")
 
 class CaptureStdout:
     def __init__(self, container):
@@ -360,16 +378,12 @@ if st.session_state.satellite_name:
             )
 
     # Upload to Google Sheet button
-        if st.button("Upload to Google Sheet"):
-            # Combine all data into one dict for upload (flatten if needed)
-            combined_data = {}
-            for section in ["basic_info", "technical_specs", "launch_cost_info"]:
-                combined_data.update(st.session_state.satellite_data.get(section, {}))
-            upload_to_gsheet(satellite_name, combined_data)
-            st.success("Data uploaded to Google Sheet!")
-
-        
-    
+    if st.button("Upload to Google Sheet"):
+        try:
+            # Upload each section separately
+            upload_to_gsheet(satellite_name, st.session_state.satellite_data)
+        except Exception as e:
+            st.error(f"Error uploading data: {str(e)}")
 
     # Display last updated time if available
     if any([basic_info_data, tech_specs_data, launch_cost_data]):
