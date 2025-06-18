@@ -8,6 +8,9 @@ import pandas as pd
 import os
 import sys
 from dotenv import load_dotenv
+import gspread
+from gspread_dataframe import set_with_dataframe
+from google.oauth2.service_account import Credentials
 
 # Load environment variables
 load_dotenv()
@@ -29,6 +32,31 @@ if 'satellite_data' not in st.session_state:
         "technical_specs": {},
         "launch_cost_info": {}
     }
+
+SHEET_ID = "1gWsnjIbK_c6oml5KytVbSQk7UF20P_0VAH6xSPm9Soc"  # <-- Replace with your actual Google Sheet ID
+WORKSHEET_NAME = "Sheet1"
+
+def get_gspread_client():
+    creds_dict = st.secrets["google_service_account"]
+    creds = Credentials.from_service_account_info(creds_dict, scopes=["https://www.googleapis.com/auth/spreadsheets"])
+    client = gspread.authorize(creds)
+    return client
+
+def upload_to_gsheet(satellite_name, data_dict):
+    # Prepare data: first column is satellite name, then each key as a column
+    row = {"satellite_name": satellite_name}
+    row.update(data_dict)
+    df = pd.DataFrame([row])
+    client = get_gspread_client()
+    sheet = client.open_by_key(SHEET_ID).worksheet(WORKSHEET_NAME)
+    # Get existing data to determine where to append
+    existing = pd.DataFrame(sheet.get_all_records())
+    # If sheet is empty, write headers
+    if existing.empty:
+        set_with_dataframe(sheet, df)
+    else:
+        # Append new row
+        set_with_dataframe(sheet, pd.concat([existing, df], ignore_index=True))
 
 class CaptureStdout:
     def __init__(self, container):
@@ -332,7 +360,17 @@ if st.session_state.satellite_name:
             )
         else:
             st.info("No data available for this satellite yet.")
-    
+    # ...after your tab4 code, before the "last updated" section...
+
+    # Upload to Google Sheet button
+    if st.button("Upload to Google Sheet"):
+        # Combine all data into one dict for upload (flatten if needed)
+        combined_data = {}
+        for section in ["basic_info", "technical_specs", "launch_cost_info"]:
+            combined_data.update(st.session_state.satellite_data.get(section, {}))
+        upload_to_gsheet(satellite_name, combined_data)
+        st.success("Data uploaded to Google Sheet!")
+
     # Display last updated time if available
     if any([basic_info_data, tech_specs_data, launch_cost_data]):
         latest_data = max(
