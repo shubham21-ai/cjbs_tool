@@ -4,7 +4,6 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from data_manager import SatelliteDataManager
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_community.utilities import SerpAPIWrapper
 import os
 from dotenv import load_dotenv
 import time
@@ -55,13 +54,8 @@ class CostBot:
             ),
             Tool(
                 name="Tavily Search",
-                func=TavilySearchResults(max_results=5).run,
+                func=TavilySearchResults(max_results=10).run,
                 description="Useful for getting information from the web. Returns search results with URLs and content.",
-            ),
-            Tool(
-                name="SerpAPI Search",
-                func=SerpAPIWrapper().run,
-                description="Useful for searching the web using SerpAPI search engine."
             ),
             Tool(
                 name="Complete Task",
@@ -103,7 +97,7 @@ class CostBot:
             model="gemini-1.5-flash",
             api_key=GOOGLE_API_KEY,
             temperature=0.1,  # Lower temperature for more consistent output
-            max_retries=3,
+            max_retries=5,
             timeout=120
         )
         

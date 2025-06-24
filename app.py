@@ -189,14 +189,7 @@ if st.session_state.satellite_name:
     
     # Process and display basic information
     with tab1:
-        col1, col2 = st.columns([6, 1])
-        with col1:
-            st.subheader("Basic Information")
-        with col2:
-            if st.button("🗑️", key="delete_basic_info"):
-                st.session_state.satellite_data["basic_info"] = {}
-                data_manager.delete_satellite_data_type(satellite_name, "basic_info")
-                st.rerun()
+        st.subheader("Basic Information")
         if st.session_state.satellite_data["basic_info"]:
             st.json(st.session_state.satellite_data["basic_info"])
             json_str = json.dumps(st.session_state.satellite_data["basic_info"], indent=2)
@@ -248,14 +241,7 @@ if st.session_state.satellite_name:
 
     # Process and display technical specifications
     with tab2:
-        col1, col2 = st.columns([6, 1])
-        with col1:
-            st.subheader("Technical Specifications")
-        with col2:
-            if st.button("🗑️", key="delete_tech_specs"):
-                st.session_state.satellite_data["technical_specs"] = {}
-                data_manager.delete_satellite_data_type(satellite_name, "technical_specs")
-                st.rerun()
+        st.subheader("Technical Specifications")
         if st.session_state.satellite_data["technical_specs"]:
             st.json(st.session_state.satellite_data["technical_specs"])
             json_str = json.dumps(st.session_state.satellite_data["technical_specs"], indent=2)
@@ -307,14 +293,7 @@ if st.session_state.satellite_name:
 
     # Process and display launch and cost information
     with tab3:
-        col1, col2 = st.columns([6, 1])
-        with col1:
-            st.subheader("Launch & Cost Information")
-        with col2:
-            if st.button("🗑️", key="delete_launch_cost"):
-                st.session_state.satellite_data["launch_cost_info"] = {}
-                data_manager.delete_satellite_data_type(satellite_name, "launch_cost_info")
-                st.rerun()
+        st.subheader("Launch & Cost Information")
         if st.session_state.satellite_data["launch_cost_info"]:
             st.json(st.session_state.satellite_data["launch_cost_info"])
             json_str = json.dumps(st.session_state.satellite_data["launch_cost_info"], indent=2)
@@ -376,15 +355,13 @@ if st.session_state.satellite_name:
                 file_name=f"{satellite_name}_all_data.json",
                 mime="application/json"
             )
-
-    # Upload to Google Sheet button
-    if st.button("Upload to Google Sheet"):
-        # Combine all data into one dict for upload (flatten if needed)
-        combined_data = {}
-        for section in ["basic_info", "technical_specs", "launch_cost_info"]:
-            combined_data.update(st.session_state.satellite_data.get(section, {}))
-        upload_to_gsheet(satellite_name, combined_data)
-        st.success("Data uploaded to Google Sheet!")
+            if st.button("Upload to Google Sheet"):
+                # Combine all data into one dict for upload (flatten if needed)
+                combined_data = {}
+                for section in ["basic_info", "technical_specs", "launch_cost_info"]:
+                    combined_data.update(st.session_state.satellite_data.get(section, {}))
+                upload_to_gsheet(satellite_name, combined_data)
+                st.success("Data uploaded to Google Sheet!")
 
     # Display last updated time if available
     if any([basic_info_data, tech_specs_data, launch_cost_data]):
