@@ -189,7 +189,14 @@ if st.session_state.satellite_name:
     
     # Process and display basic information
     with tab1:
-        st.subheader("Basic Information")
+        col1, col2 = st.columns([6, 1])
+        with col1:
+            st.subheader("Basic Information")
+        with col2:
+            if st.button("🗑️", key="delete_basic_info"):
+                st.session_state.satellite_data["basic_info"] = {}
+                data_manager.delete_satellite_data_type(satellite_name, "basic_info")
+                st.rerun()
         if st.session_state.satellite_data["basic_info"]:
             st.json(st.session_state.satellite_data["basic_info"])
             json_str = json.dumps(st.session_state.satellite_data["basic_info"], indent=2)
@@ -200,6 +207,7 @@ if st.session_state.satellite_name:
                 mime="application/json"
             )
         else:
+            st.info("No basic information available. Use the fetch button below to gather data.")
             if st.button("Gather Basic Information", key=f"gather_basic_{satellite_name}"):
                 with st.spinner("Gathering basic information..."):
                     try:
@@ -212,7 +220,6 @@ if st.session_state.satellite_name:
                             stdout_capture = CaptureStdout(terminal_container)
                             old_stdout = sys.stdout
                             sys.stdout = stdout_capture
-                            
                             try:
                                 result = basic_bot.process_satellite(satellite_name)
                                 status.success("Agent finished.")
@@ -226,7 +233,6 @@ if st.session_state.satellite_name:
                                         file_name=f"{satellite_name}_basic_info.json",
                                         mime="application/json"
                                     )
-                                    # Update session state and save the data
                                     st.session_state.satellite_data["basic_info"] = result
                                     data_manager.append_satellite_data(satellite_name, "basic_info", result)
                                     st.rerun()
@@ -239,10 +245,17 @@ if st.session_state.satellite_name:
                                 sys.stdout = old_stdout
                     except Exception as e:
                         st.error(f"Failed to initialize BasicInfoBot: {str(e)}")
-    
+
     # Process and display technical specifications
     with tab2:
-        st.subheader("Technical Specifications")
+        col1, col2 = st.columns([6, 1])
+        with col1:
+            st.subheader("Technical Specifications")
+        with col2:
+            if st.button("🗑️", key="delete_tech_specs"):
+                st.session_state.satellite_data["technical_specs"] = {}
+                data_manager.delete_satellite_data_type(satellite_name, "technical_specs")
+                st.rerun()
         if st.session_state.satellite_data["technical_specs"]:
             st.json(st.session_state.satellite_data["technical_specs"])
             json_str = json.dumps(st.session_state.satellite_data["technical_specs"], indent=2)
@@ -253,6 +266,7 @@ if st.session_state.satellite_name:
                 mime="application/json"
             )
         else:
+            st.info("No technical specifications available. Use the fetch button below to gather data.")
             if st.button("Gather Technical Specifications", key=f"gather_tech_{satellite_name}"):
                 with st.spinner("Gathering technical specifications..."):
                     try:
@@ -265,7 +279,6 @@ if st.session_state.satellite_name:
                             stdout_capture = CaptureStdout(terminal_container)
                             old_stdout = sys.stdout
                             sys.stdout = stdout_capture
-                            
                             try:
                                 result = tech_bot.process_satellite(satellite_name)
                                 status.success("Agent finished.")
@@ -279,7 +292,6 @@ if st.session_state.satellite_name:
                                         file_name=f"{satellite_name}_tech_specs.json",
                                         mime="application/json"
                                     )
-                                    # Update session state and save the data
                                     st.session_state.satellite_data["technical_specs"] = result
                                     data_manager.append_satellite_data(satellite_name, "technical_specs", result)
                                     st.rerun()
@@ -292,10 +304,17 @@ if st.session_state.satellite_name:
                                 sys.stdout = old_stdout
                     except Exception as e:
                         st.error(f"Failed to initialize TechAgent: {str(e)}")
-    
+
     # Process and display launch and cost information
     with tab3:
-        st.subheader("Launch and Cost Information")
+        col1, col2 = st.columns([6, 1])
+        with col1:
+            st.subheader("Launch & Cost Information")
+        with col2:
+            if st.button("🗑️", key="delete_launch_cost"):
+                st.session_state.satellite_data["launch_cost_info"] = {}
+                data_manager.delete_satellite_data_type(satellite_name, "launch_cost_info")
+                st.rerun()
         if st.session_state.satellite_data["launch_cost_info"]:
             st.json(st.session_state.satellite_data["launch_cost_info"])
             json_str = json.dumps(st.session_state.satellite_data["launch_cost_info"], indent=2)
@@ -306,6 +325,7 @@ if st.session_state.satellite_name:
                 mime="application/json"
             )
         else:
+            st.info("No launch and cost information available. Use the fetch button below to gather data.")
             if st.button("Gather Launch and Cost Information", key=f"gather_launch_{satellite_name}"):
                 with st.spinner("Gathering launch and cost information..."):
                     try:
@@ -318,7 +338,6 @@ if st.session_state.satellite_name:
                             stdout_capture = CaptureStdout(terminal_container)
                             old_stdout = sys.stdout
                             sys.stdout = stdout_capture
-                            
                             try:
                                 result = cost_bot.process_satellite(satellite_name)
                                 status.success("Agent finished.")
@@ -332,7 +351,6 @@ if st.session_state.satellite_name:
                                         file_name=f"{satellite_name}_launch_cost.json",
                                         mime="application/json"
                                     )
-                                    # Update session state and save the data
                                     st.session_state.satellite_data["launch_cost_info"] = result
                                     data_manager.append_satellite_data(satellite_name, "launch_cost_info", result)
                                     st.rerun()
@@ -345,7 +363,7 @@ if st.session_state.satellite_name:
                                 sys.stdout = old_stdout
                     except Exception as e:
                         st.error(f"Failed to initialize CostBot: {str(e)}")
-    
+
     # Display raw JSON data
     with tab4:
         st.subheader("Raw JSON Data")
@@ -360,16 +378,13 @@ if st.session_state.satellite_name:
             )
 
     # Upload to Google Sheet button
-        if st.button("Upload to Google Sheet"):
-            # Combine all data into one dict for upload (flatten if needed)
-            combined_data = {}
-            for section in ["basic_info", "technical_specs", "launch_cost_info"]:
-                combined_data.update(st.session_state.satellite_data.get(section, {}))
-            upload_to_gsheet(satellite_name, combined_data)
-            st.success("Data uploaded to Google Sheet!")
-
-        
-    
+    if st.button("Upload to Google Sheet"):
+        # Combine all data into one dict for upload (flatten if needed)
+        combined_data = {}
+        for section in ["basic_info", "technical_specs", "launch_cost_info"]:
+            combined_data.update(st.session_state.satellite_data.get(section, {}))
+        upload_to_gsheet(satellite_name, combined_data)
+        st.success("Data uploaded to Google Sheet!")
 
     # Display last updated time if available
     if any([basic_info_data, tech_specs_data, launch_cost_data]):

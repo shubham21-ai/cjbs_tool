@@ -4,7 +4,6 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from data_manager import SatelliteDataManager
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_community.tools import DuckDuckGoSearchRun
 from langchain_community.utilities import SerpAPIWrapper
 import os
 from dotenv import load_dotenv
@@ -65,9 +64,9 @@ class BasicInfoBot:
                 description="Useful for getting information from the web. Returns search results with URLs and content.",
             ),
             Tool(
-                name="DuckDuckGo Search",
-                func=DuckDuckGoSearchRun().run,
-                description="Useful for searching the web using DuckDuckGo search engine."
+                name="SerpAPI Search",
+                func=SerpAPIWrapper().run,
+                description="Useful for searching the web using SerpAPI search engine."
             ),
             Tool(
                 name="Complete Task",
